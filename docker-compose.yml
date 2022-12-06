@@ -1,0 +1,130 @@
+#version: "3.9"
+
+services:
+#  core:
+#    build:
+#      context: ./Core
+#      dockerfile: Dockerfile
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dockerized
+#      - SPRING_RABBITMQ_HOST=rabbitmq
+#    restart: always
+#    ports:
+#      - 8081:8081
+#    networks:
+#      - backend
+#    depends_on:
+#      rabbitmq:
+#        condition: service_healthy
+
+#  core-manager:
+#    build:
+#      context: ./CoreManager
+#      dockerfile: Dockerfile
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dockerized
+#      - SPRING_RABBITMQ_HOST=rabbitmq
+#    restart: always
+#    ports:
+#      - 8082:8082
+#    networks:
+#      - backend
+#    depends_on:
+#      rabbitmq:
+#        condition: service_healthy
+
+#  train-manager:
+#    build:
+#      context: ./TrainManager
+#      dockerfile: Dockerfile
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dockerized
+#      - SPRING_RABBITMQ_HOST=rabbitmq
+#    restart: always
+#    ports:
+#      - 8084:8084
+#    networks:
+#      - backend
+#    depends_on:
+#      rabbitmq:
+#        condition: service_healthy
+
+  estimator:
+    build:
+      context: ./Estimator
+      dockerfile: Dockerfile
+#    restart: always
+    ports:
+      - 8083:8083
+    networks:
+      - backend
+    environment:
+      - MYSQL_DATABASE_URL=mysql_db
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=pwd
+      - ESTIMATOR_LOG_LEVEL=DEBUG
+      - ESTIMATOR_LOG_FILE=estimator.log
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  train:
+    build:
+      context: ./Train
+      dockerfile: Dockerfile
+#    image: tomi70/train:2.0
+    restart: always
+    ports:
+      - 8085:8085
+    networks:
+      - backend
+    environment:
+      - RABBITMQ_URL=rabbitmq
+      - MYSQL_DATABASE_URL=mysql_db
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=pwd
+      - TRAIN_LOG_LEVEL=DEBUG
+      - TRAIN_INSERT_BATCH_SIZE=500
+      - TRAIN_LOG_FILE=train.log
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: "rabbitmq:3-management"
+    command: rabbitmq-server
+    ports:
+      - 5672:5672
+      - 15672:15672
+        #    restart: always
+    networks:
+      - backend
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 5s
+      timeout: 20s
+      retries: 5
+
+  mysql_db:
+    image: mysql:8.0.27
+    restart: always
+    ports:
+      - 13306:3306
+    networks:
+      - backend
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=fraud
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=test
+      - MYSQL_ROOT_PASSWORD=pwd
+      - INSERT_BATCH_SIZE=1000
+
+networks:
+  backend:
+volumes:
+  db_data:
+
