@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS common_fraud.train_task
+(
+    id                                                      BIGINT NOT NULL AUTO_INCREMENT,
+    planned_encoding_and_feature_engineering_id             BIGINT,
+    feature_selector_code                                   INT,
+    sampler_code                                            INT,
+    scaler_code                                             INT,
+    model_code                                              INT,
+    test_size                                               DOUBLE,
+    progress_status                                         VARCHAR(255),
+    PRIMARY KEY (id)
+) engine = InnoDB

@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS common_fraud.encoded_table_registry
+(
+    id                      BIGINT NOT NULL AUTO_INCREMENT,
+    raw_dataset_id          BIGINT NOT NULL,
+    encoding_id             BIGINT NOT NULL,
+    time_base_field_name    VARCHAR(255),
+    encoded_table_name      VARCHAR(255),
+    encoded_field_names     JSON,
+    label_encoder_registry  JSON,
+    FOREIGN KEY (raw_dataset_id)    REFERENCES raw_dataset(id),
+    FOREIGN KEY (encoding_id)   REFERENCES encoding(id),
+    PRIMARY KEY (id)
+) engine = InnoDB

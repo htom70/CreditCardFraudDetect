@@ -1,0 +1,30 @@
+CREATE TABLE IF NOT EXISTS common_fraud.metrics
+(
+    id                      BIGINT NOT NULL AUTO_INCREMENT,
+    estimator_id            BIGINT NOT NULL,
+    TP                      DOUBLE PRECISION,
+    FP                      DOUBLE PRECISION,
+    TN                      DOUBLE PRECISION,
+    FN                      DOUBLE PRECISION,
+    sensitivity             DOUBLE PRECISION,
+    specificity             DOUBLE PRECISION,
+    accuracy                DOUBLE PRECISION,
+    balanced_accuracy       DOUBLE PRECISION,
+    prec                    DOUBLE PRECISION,
+    recall                  DOUBLE PRECISION,
+    PPV                     DOUBLE PRECISION,
+    NPV                     DOUBLE PRECISION,
+    FNR                     DOUBLE PRECISION,
+    FPR                     DOUBLE PRECISION,
+    FDR                     DOUBLE PRECISION,
+    F_OR                    DOUBLE PRECISION,
+    f1                      DOUBLE PRECISION,
+    f_05                    DOUBLE PRECISION,
+    f2                      DOUBLE PRECISION,
+    MCC                     DOUBLE PRECISION,
+    ROCAUC                  DOUBLE PRECISION,
+    Youdens_statistic       DOUBLE PRECISION,
+    PRIMARY KEY(id),
+    FOREIGN KEY (estimator_id) REFERENCES estimator(id)
+) engine = InnoDB
+

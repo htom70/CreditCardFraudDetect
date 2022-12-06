@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS common_fraud.feature_engineered_table_registry
+(
+    id                                      BIGINT NOT NULL AUTO_INCREMENT,
+    encoded_table_registry_id               BIGINT NOT NULL,
+    feature_engineering_id                  BIGINT NOT NULL,
+    feature_engineered_table_name           VARCHAR(255),
+    feature_engineered_insert_script        VARCHAR(4096),
+    FOREIGN KEY (encoded_table_registry_id) REFERENCES encoded_table_registry(id),
+    FOREIGN KEY (feature_engineering_id)    REFERENCES feature_engineering(id),
+    PRIMARY KEY (id)
+) engine = InnoDB

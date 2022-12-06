@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS common_fraud.raw_dataset
+(
+    id                      BIGINT NOT NULL AUTO_INCREMENT,
+    schema_name    VARCHAR(255),
+    table_name     VARCHAR(255),
+    primary key (id)
+) ENGINE = InnoDB

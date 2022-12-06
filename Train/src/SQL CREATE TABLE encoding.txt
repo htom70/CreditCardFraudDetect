@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS common_fraud.encoding
+(
+    id                      BIGINT NOT NULL AUTO_INCREMENT,
+    encoding_parameters     JSON,
+    primary key (id)
+) ENGINE = InnoDB

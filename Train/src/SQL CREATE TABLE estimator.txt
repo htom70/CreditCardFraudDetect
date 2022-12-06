@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS common_fraud.estimator
+(
+    id                      BIGINT NOT NULL AUTO_INCREMENT,
+    train_task_id           BIGINT NOT NULL,
+    estimator_object        MEDIUMBLOB,
+    PRIMARY KEY (id),
+    FOREIGN KEY (train_task_id) REFERENCES train_task(id)
+) engine = InnoDB

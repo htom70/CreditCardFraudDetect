@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS common_fraud.planned_encoding_and_feature_engineering
+(
+    id                                  BIGINT NOT NULL AUTO_INCREMENT,
+    schema_name                         VARCHAR(255),
+    table_name                          VARCHAR(255),
+    detailed_information_about_table    JSON,
+    time_base_field_name                VARCHAR(255),
+    encoding_parameters                 JSON,
+    feature_engineering_parameters      JSON,
+    PRIMARY KEY (id)
+) engine = InnoDB

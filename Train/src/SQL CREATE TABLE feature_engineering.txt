@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS common_fraud.feature_engineering
+(
+    id                              BIGINT NOT NULL AUTO_INCREMENT,
+    feature_engineering_parameters  JSON,
+    PRIMARY KEY (id)
+) engine = InnoDB
