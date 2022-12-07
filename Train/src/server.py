@@ -30,6 +30,9 @@ from xgboost import XGBClassifier
 
 import database_module
 
+# import pydevd_pycharm
+# pydevd_pycharm.settrace('localhost', port=41691, stdoutToServer=True, stderrToServer=True)
+
 DEFAULT_INSERT_BATCH_SIZE = 1000
 DATABASE_ENCODED_YET = "database_encoded_yet"
 DATABASE_ENCODING_BEGAN = "database_encoding_began"
@@ -204,6 +207,7 @@ def get_records_with_limit_and_offset():
         logger.error(message)
         return Response(message, 400)
     field_types_by_name = database_handler.get_field_types_by_name(schema_name, table_name)
+    logger.debug(field_types_by_name)
     result.append(field_types_by_name)
     if limit is None or offset is None:
         result.append(database_handler.get_records(schema_name, table_name))
@@ -396,6 +400,7 @@ def get_encoded_table():
         logger.error(error_message)
         return Response(error_message, status=400)
     return jsonify(result)
+
 
 @app.route('/available_feature_selector', methods=['GET'])
 def get_available_feature_selector():
@@ -823,8 +828,11 @@ def process_fit(parameter):
         start_encoding = time.time()
         logger.info(f"database encoding started, train task id: {train_task_id}")
         send_async_message(train_task_id, DATABASE_ENCODING_BEGAN)
-        dataset_to_train, encoded_table_registry_id, encoded_table_name, encoded_field_names, label_encoder_registry = database_handler.encode(
-            raw_dataset_id, schema_name, table_name, encoding_id, encoding_parameters, time_base_field_name)
+        try:
+            dataset_to_train, encoded_table_registry_id, encoded_table_name, encoded_field_names, label_encoder_registry = database_handler.encode(
+                raw_dataset_id, schema_name, table_name, encoding_id, encoding_parameters, time_base_field_name)
+        except Exception as e:
+            logger.error("Error occured: " + str(e))
 
         finish_encoding = time.time()
         encoding_process_time = finish_encoding - start_encoding
@@ -1000,7 +1008,6 @@ if __name__ == "__main__":
     database_url = os.getenv("MYSQL_DATABASE_URL", "localhost")
     database_user = os.getenv("MYSQL_USER", "root")
     database_password = os.getenv("MYSQL_PASSWORD", "pwd")
-    insert_batch_size = os.getenv("TRAIN_INSERT_BATCH_SIZE", DEFAULT_INSERT_BATCH_SIZE)
     file_handler = logging.FileHandler(log_file)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(formatter)
@@ -1011,10 +1018,8 @@ if __name__ == "__main__":
     logger.debug("MYSQL_DATABASE_URL: " + database_url)
     logger.debug("MYSQL_USER :" + database_user)
     logger.debug("MYSQL_PASSWORD: " + database_password)
-    logger.debug("TRAIN_INSERT_BATCH_SIZE: " + str(insert_batch_size))
     logger.debug("Train application started")
-    database_handler = database_module.Handler(database_url, database_user, database_password, insert_batch_size)
+    database_handler = database_module.Handler(database_url, database_user, database_password)
     database_handler.create_common_fraud_schemas()
     logger.debug("train modul started")
     app.run(host='0.0.0.0', port=8085, debug=True)
-

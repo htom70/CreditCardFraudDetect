@@ -52,13 +52,12 @@ class NumpyMySQLConverter(mysql.connector.conversion.MySQLConverter):
 
 
 class Handler:
-    def __init__(self, database_url, database_user, database_password, insert_batch_size):
+    def __init__(self, database_url, database_user, database_password):
         self.logger = logging.getLogger("train.server.database")
         self.database_url = database_url
         self.database_user = database_user
         self.database_password = database_password
         self.connection = self.get_connection(self.database_url, self.database_user, self.database_password)
-        self.insert_batch_size = insert_batch_size
 
     def get_connection(self, database_url, database_user_name, database_password):
         try:
@@ -176,7 +175,6 @@ class Handler:
                         field = datetime.strftime(field, '%Y-%m-%d %H:%M:%S:%f')
                     fields.append(field)
                 records.append(fields)
-            return records
         except mysql.connector.Error as err:
             self.logger.error(f"MySQL error message: {err.msg}")
         cursor.close()
@@ -747,6 +745,7 @@ class Handler:
                 field_types_by_name[field_name]=field_type
             cursor.close()
             self.logger.debug(f"field types by name in {schema_name} schema, {table_name} table: {field_types_by_name}")
+            print("field type után")
             return field_types_by_name
         except mysql.connector.Error as err:
             self.logger.error(f"MySQL error message: {err.msg}")
@@ -767,7 +766,7 @@ class Handler:
     def persist_encoded_or_engineered_dataset(self, script, dataset, type):
         cursor = self.connection.cursor()
         length_of_dataset = len(dataset)
-        bound = self.insert_batch_size
+        bound = 1000
         try:
             if length_of_dataset > bound:
                 number_of_part_array = int(length_of_dataset / bound)
