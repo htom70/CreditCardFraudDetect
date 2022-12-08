@@ -19,6 +19,7 @@ UNDER_SCORE = "_"
 ENCODED = "encoded"
 FE = "engineered"  # feature engineered
 DOESNT_EXIST = "doesnt_exist"
+SAVED="saved"
 IN_PROGRESS = "in_progress"
 OTHER_APPLICABLE_ENCODING_TYPES="other_applicable_encoding_types"
 
@@ -453,7 +454,7 @@ class Handler:
             raise IllegalArgumentException(
                 {"message": "Parameter must be between 0 and 1", "parameter_name": "test_size", "value": test_size})
 
-        progress_status = "SAVED"
+        progress_status = SAVED
 
         self.check_if_train_task_exist(planned_encoding_and_feature_engineering_id, feature_selector_code,
                                        sampler_code, scaler_code,
