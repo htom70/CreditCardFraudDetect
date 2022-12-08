@@ -3,7 +3,6 @@ from datetime import datetime
 import time
 import logging
 import os
-# import numpy as np
 import pandas as pd
 import pickle
 from xgboost import XGBClassifier
@@ -375,7 +374,7 @@ if __name__ == "__main__":
     # rabbitmq_url = os.getenv("RABBITMQ_URL", "localhost")
     database_url = os.getenv("MYSQL_DATABASE_URL", "localhost")
     database_user = os.getenv("MYSQL_USER", "root")
-    database_password = os.getenv("MYSQL_PASSWORD", "pwd")
+    database_password = os.getenv("MYSQL_ROOT_PASSWORD", "pwd")
     file_handler = logging.FileHandler(log_file)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(formatter)
