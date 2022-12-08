@@ -463,7 +463,7 @@ def save_train_task():
         value = details.get("value")
         id = details.get("id")
         error_message = f"{message}" + (
-            f", parameter name: {parameter_name}" if request_parameter is not None else "") + (
+            f", parameter name: {parameter_name}" if parameter_name is not None else "") + (
                             f", value: {value}" if value is not None else "") + (
                             f", id: {id}" if id is not None else "")
         logger.error(error_message)
